@@ -1,0 +1,14 @@
+{
+  "AppVersion": "1.0.0",
+  "Title": "SysInfo",
+  "Thumbnail": "lively_t.jpg",
+  "Preview": "lively_p.jpg",
+  "Desc": "Show system information",
+  "Author": "nudred",
+  "License": "MIT",
+  "Contact": "https://github.com/nudred/lively-wallpaper-system-info",
+  "Type": 1,
+  "FileName": "index.html",
+  "Arguments": "--system-information",
+  "IsAbsolutePath": false
+}

@@ -1,0 +1,17 @@
+{
+    "image_path": {
+        "filter": "*.jpg|*.png",
+        "folder": "wallpapers",
+        "text": "Image",
+        "type": "folderDropdown",
+        "value": "japan.jpg"
+    },
+    "blur": {
+        "max": 8,
+        "min": 0,
+        "text": "Blur",
+        "tick": 1,
+        "type": "slider",
+        "value": 1
+      }
+}

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lively Wallpaper</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -moz-user-select: none;
+      -khtml-user-select: none;
+    }
+
+    body,
+    .wallpaper {
+      background-color: #000000;
+      height: 100vh;
+      overflow: hidden;
+      width: 100vw;
+
+    }
+
+    .wallpaper {
+      position: fixed;
+      z-index: 1;
+    }
+
+    .live_info {
+      top: 16px;
+    }
+
+    .sys_info {
+      bottom: 56px;
+    }
+
+    .live_info,
+    .sys_info {
+      cursor: pointer;
+      position: fixed;
+      right: 16px;
+      text-align: right;
+      z-index: 9999;
+    }
+
+    .live_info div,
+    .sys_info div {
+      color: #ffffff;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      letter-spacing: 1px;
+      line-height: 24px;
+      padding: 0 4px;
+      text-shadow: 0 0 2px #000000;
+    }
+
+    .live_info div:hover,
+    .sys_info div:hover {
+      background-color: #ffffff;
+      border-radius: 4px;
+      color: #000000;
+      text-shadow: none;
+    }
+
+    .live_info div span {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wallpaper"></div>
+  <div class="live_info">
+    <div>
+      <span>WAN IP</span>
+      <span class="global_ip"></span>
+    </div>
+    <div>
+      <span>CPU</span>
+      <span class="cpu_usage"></span>
+    </div>
+    <div>
+      <span>GPU</span>
+      <span class="gpu_usage"></span>
+    </div>
+    <div>
+      <span>RAM</span>
+      <span class="ram_usage"></span>
+    </div>
+    <div>
+      <span>Network</span>
+      <span class="net_usage_down"></span>
+      <span class="net_usage_up"></span>
+    </div>
+  </div>
+  <div class="sys_info">
+    <div class="cpu_name"></div>
+    <div class="net_name"></div>
+  </div>
+  <script type="text/javascript">
+    const wallpaper = document.querySelector(".wallpaper");
+    const global_ip = document.querySelector(".global_ip");
+    const cpu_usage = document.querySelector(".cpu_usage");
+    const gpu_usage = document.querySelector(".gpu_usage");
+    const ram_usage = document.querySelector(".ram_usage");
+    const net_usage_down = document.querySelector(".net_usage_down");
+    const net_usage_up = document.querySelector(".net_usage_up");
+    const cpu_name = document.querySelector(".cpu_name");
+    const net_name = document.querySelector(".net_name");
+
+    function livelySystemInformation(data) {
+      var value = JSON.parse(data);
+      cpu_usage.innerText = `${value.CurrentCpu.toFixed(2)}%`;
+      gpu_usage.innerText = `${value.CurrentGpu3D.toFixed(2)}%`;
+      ram_usage.innerText = `${((value.TotalRam - value.CurrentRamAvail) / value.TotalRam * 100).toFixed(2)}%`;
+      net_usage_down.innerHTML = `&#128317;${((value.CurrentNetDown * 8) / (1024 * 1024)).toFixed(2)}Mb/s`;
+      net_usage_up.innerHTML = `&#128316;${((value.CurrentNetUp * 8) / (1024 * 1024)).toFixed(2)}Mb/s`;
+      cpu_name.innerText = value.NameCpu;
+      net_name.innerText = value.NameNetCard;
+    }
+
+    function livelyPropertyListener(key, value) {
+      switch (key) {
+        case "image_path":
+          wallpaper.style.backgroundImage = `url("${value.replace('\\', '/')}")`;
+          break;
+        case "blur":
+          wallpaper.style.filter = `blur(${value}px)`;
+          break;
+      }
+    }
+
+    function get_global_ip() {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "https://api.ipify.org");
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+          global_ip.innerText = xhr.responseText;
+        }
+      };
+      xhr.send();
+      setTimeout(get_global_ip, 30 * 1000);
+    }
+
+    window.onload = () => {
+      get_global_ip();
+    }
+  </script>
+</body>
+
+</html>
